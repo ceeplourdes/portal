@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEEP LOURDES</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="CEEP LOURDES">
+        </a>
+        <nav>
+            <a href="#escola">NOSSA ESCOLA</a>
+            <a href="#cursos">CURSOS</a>
+            <a href="#noticias">NOTÍCIAS</a>
+            <a href="#horario">HORÁRIO DAS TURMAS</a>
+            <a href="#agendamento">AGENDAMENTOS</a>
+        </nav>
+    </header>
+
+    <section class="banner">
+        <div class="slideshow-container">
+            <div class="mySlides fade">
+                <img src="banner.jpg" alt="Banner 1 - CEEP Lourdes">
+            </div>
+            <div class="mySlides fade">
+                <img src="banner2.jpg" alt="Banner 2 - CEEP Lourdes">
+            </div>
+            
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+        
+        <div class="dots-container">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+        </div>
+    </section>
+
+    <section class="botoes-linha-unica">
+        <a href="https://consultaenova.educacao.ba.gov.br/" class="botao-horizontal" target="_blank">
+            <div class="icone">👨‍🏫</div>
+            <div class="texto-botao">ENOVA<br>Consulta professor</div>
+        </a>
+        
+        <a href="https://consultaaluno.educacao.ba.gov.br/" class="botao-horizontal" target="_blank">
+            <div class="icone">👨‍🎓</div>
+            <div class="texto-botao">ENOVA<br>Consulta aluno</div>
+        </a>
+        
+        <a href="https://senhaenova.educacao.ba.gov.br/" class="botao-horizontal" target="_blank">
+            <div class="icone">🔑</div>
+            <div class="texto-botao">ENOVA<br>Recuperar senha</div>
+        </a>
+        
+        <a href="https://siadiante.educacao.ba.gov.br/acesso" class="botao-horizontal" target="_blank">
+            <div class="icone">📝</div>
+            <div class="texto-botao">SIADIANTE<br>Atualização cadastral</div>
+        </a>
+    </section>
+
+    <main>
+        <section class="conteudo-principal">
+            <h1>Bem-vindo ao site da escola</h1>
+            <p>Informações, agenda e muito mais...</p>
+        </section>
+
+        <aside class="ultimas-noticias">
+            <h2>Últimas Notícias</h2>
+            <div id="lista-noticias" class="noticias-container">
+                <div class="carregando">Carregando notícias...</div>
+            </div>
+            <button id="ver-mais" class="btn-ver-mais" style="display: none;">Ver mais notícias</button>
+        </aside>
+    </main>
+
+    <section id="escola" class="escola-moderna">
+    <div class="escola-header">
+        <h2><span class="destaque">CEEP</span> LOURDES</h2>
+        <p class="slogan">SINCE 2006</p>
+    </div>
+
+    <div class="escola-grid">
+        <div class="escola-card escola-historia">
+           
+            <h3>Nossa História</h3>
+            <p>O Centro Estadual de Educação Profissional em Informática e Gestão Lourdes Carvalho Neves Batista, localizado na Avenida Antônio Carlos Magalhães, n° 9998, Bairro Mangueira, Município de Cícero Dantas – BA, foi criada pela portaria de 14905, publicada no Diário Oficial de 10/11/2006.</p>
+        </div>
+
+        <div class="escola-card escola-cursos">
+                      <h3>Cursos Oferecidos</h3>
+            <ul class="cursos-lista">
+                <li>Administração</li>
+                <li>Agropecuária</li>
+                <li>Agronegócio</li>
+                <li>Informática</li>
+                        </ul>
+        </div>
+
+        <div class="escola-card escola-local">
+                        <h3>Onde Estamos</h3>
+            <p>Av. Antônio Carlos Magalhães, 9998<br>Bairro Mangueira<br>Cícero Dantas - BA</p>
+            <a href="#localizacao" class="btn-localizacao">Ver no mapa →</a>
+        </div>
+    </div>
+
+    <div class="valores-container">
+        <div class="valor-item">
+            <h4><span class="valor-icon">🎯</span> Missão</h4>
+            <p>Oferecer educação pública de qualidade que integre conhecimentos humanísticos, científicos e tecnológicos, formando profissionais competentes e cidadãos éticos.</p>
+        </div>
+
+        <div class="valor-item">
+            <h4><span class="valor-icon">💎</span> Valores</h4>
+            <ul class="valores-lista">
+                <li>Autonomia e responsabilidade</li>
+                <li>Respeito à diversidade</li>
+                <li>Solidariedade e cooperação</li>
+                <li>Comprometimento com a excelência</li>
+            </ul>
+        </div>
+
+        <div class="valor-item">
+            <h4><span class="valor-icon">🔭</span> Visão</h4>
+            <p>Ser reconhecido como centro de referência em educação profissional, inovando em práticas pedagógicas e formando líderes para o mercado de trabalho.</p>
+        </div>
+    </div>
+</section>
+
+    <section id="horario">
+        <h2>Horário das Turmas</h2>
+        <iframe 
+            src="https://drive.google.com/file/d/1n18fp7m1Q6SGQB7BCnxogRunJP51QsN5/preview" 
+            width="100%" 
+            height="600" 
+            style="border: none;">
+        </iframe>
+    </section>
+
+    <section id="localizacao">
+    <h2>Localização</h2>
+    <div class="mapa-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d3921.6238087962665!2d-38.392331!3d-10.608557000000001!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDM2JzMwLjgiUyAzOMKwMjMnMzIuNSJX!5e0!3m2!1spt-BR!2sus!4v1754769243366!5m2!1spt-BR!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+</section>
+
+    <section id="fotos">
+        <h2>📷 Fotos de Eventos</h2>
+        <div class="galeria">
+            <img src="img/evento1.jpg" alt="Evento 1">
+            <img src="img/evento2.jpg" alt="Evento 2">
+            <img src="img/evento3.jpg" alt="Evento 3">
+        </div>
+    </section>
+
+    <section id="agendamento">
+        <h2>🖥️ Agendamento do Laboratório</h2>
+        <iframe src="https://calendar.google.com/calendar/embed?src=SEU_ID_DE_CALENDARIO&mode=week" 
+                style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
+    </section>
+
+    <footer>
+        <p>© 2025 CEEP LOURDES - Todos os direitos reservados</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
