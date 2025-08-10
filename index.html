@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEEP LOURDES</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Adicionando estilos para os containers de vídeo e mapa */
+        .video-mapa {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+        
+        .video-container, .mapa-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+            padding-bottom: 56.25%; /* Proporção 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-container iframe, 
+        .mapa-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -79,99 +109,85 @@
     </main>
 
     <section id="escola" class="escola-moderna">
-    <div class="escola-header">
-        <h2><span class="destaque">SOBRE O CEEP LOURDES</span> CARVALHO</h2>
-       
-    </div>
-
-    <div class="escola-grid">
-        <div class="escola-card escola-historia">
-           
-            <h3>Nossa história</h3>
-            <p>O Centro Estadual de Educação Profissional em Informática e Gestão Lourdes Carvalho Neves Batista, localizado na Avenida Antônio Carlos Magalhães, n° 9998, Bairro Mangueira, Município de Cícero Dantas – BA, foi criada pela portaria de 14905, publicada no Diário Oficial de 10/11/2006.</p>
+        <div class="escola-header">
+            <h2><span class="destaque">SOBRE O CEEP LOURDES</span> CARVALHO</h2>
         </div>
 
-        <div class="escola-card escola-cursos">
-                      <h3>Cursos oferecidos</h3>
-            <div class="cursos-lista">
-                <p>Atualmente a Unidade Escolar oferece o Ensino Médio Técnico em:</p>
-                <li>Administração</li>
-                <li>Agropecuária</li>
-                <li>Agronegócio</li>
-                <li>Informática</li>
+        <div class="escola-grid">
+            <div class="escola-card escola-historia">
+                <h3>Nossa história</h3>
+                <p>O Centro Estadual de Educação Profissional em Informática e Gestão Lourdes Carvalho Neves Batista, localizado na Avenida Antônio Carlos Magalhães, n° 9998, Bairro Mangueira, Município de Cícero Dantas – BA, foi criada pela portaria de 14905, publicada no Diário Oficial de 10/11/2006.</p>
+            </div>
+
+            <div class="escola-card escola-cursos">
+                <h3>Cursos oferecidos</h3>
+                <div class="cursos-lista">
+                    <p>Atualmente a Unidade Escolar oferece o Ensino Médio Técnico em:</p>
+                    
+                        <li>Administração</li>
+                        <li>Agropecuária</li>
+                        <li>Agronegócio</li>
+                        <li>Informática</li>
+                    
+                </div>
+            </div>
+
+            <div class="escola-card escola-local">
+                <h3>Onde estamos</h3>
+                <p>Av. Antônio Carlos Magalhães, 9998<br>Bairro Mangueira<br>Cícero Dantas - BA</p>
+                <a href="#localizacao" class="btn-localizacao">Ver no mapa →</a>
             </div>
         </div>
 
-        <div class="escola-card escola-local">
-                        <h3>Onde estamos</h3>
-            <p>Av. Antônio Carlos Magalhães, 9998<br>Bairro Mangueira<br>Cícero Dantas - BA</p>
-            <a href="#localizacao" class="btn-localizacao">Ver no mapa →</a>
-        </div>
-    </div>
+        <div class="valores-container">
+            <div class="valor-item">
+                <h4><span class="valor-icon">🎯</span> Missão</h4>
+                <p>Oferecer educação pública de qualidade que integre conhecimentos humanísticos, científicos e tecnológicos, formando profissionais competentes e cidadãos éticos.</p>
+            </div>
 
-    <div class="valores-container">
-        <div class="valor-item">
-            <h4><span class="valor-icon">🎯</span> Missão</h4>
-            <p>Oferecer educação pública de qualidade que integre conhecimentos humanísticos, científicos e tecnológicos, formando profissionais competentes e cidadãos éticos.</p>
-        </div>
+            <div class="valor-item">
+                <h4><span class="valor-icon">💎</span> Valores</h4>
+                <ul class="valores-lista">
+                    <li>Autonomia e responsabilidade</li>
+                    <li>Respeito à diversidade</li>
+                    <li>Solidariedade e cooperação</li>
+                    <li>Comprometimento com a excelência</li>
+                </ul>
+            </div>
 
-        <div class="valor-item">
-            <h4><span class="valor-icon">💎</span> Valores</h4>
-            <ul class="valores-lista">
-                <li>Autonomia e responsabilidade</li>
-                <li>Respeito à diversidade</li>
-                <li>Solidariedade e cooperação</li>
-                <li>Comprometimento com a excelência</li>
-            </ul>
-        </div>
-
-        <div class="valor-item">
-            <h4><span class="valor-icon">🔭</span> Visão</h4>
-            <p>Ser reconhecido como centro de referência em educação profissional, inovando em práticas pedagógicas e formando líderes para o mercado de trabalho.</p>
+            <div class="valor-item">
+                <h4><span class="valor-icon">🔭</span> Visão</h4>
+                <p>Ser reconhecido como centro de referência em educação profissional, inovando em práticas pedagógicas e formando líderes para o mercado de trabalho.</p>
+            </div>
         </div>
         
-    </div>
-    <section class="video-mapa">
-    <!-- Vídeo do YouTube -->
-    <div class="video-container">
-        <iframe width="100%" height="315" src="https://www.youtube.com/embed/n7oESkLCmrA" 
-            title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-    </div>
+        <section class="video-mapa">
+            <!-- Vídeo do YouTube -->
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/n7oESkLCmrA" 
+                    title="YouTube video player" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+            </div>
 
-    <!-- Mapa do Google -->
-    <div class="mapa-container">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.7898516604095!2d-38.392356!3d-10.608546!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDM2JzMwLjgiUyAzOMKwMjMnMzIuNSJX!5e0!3m2!1spt-BR!2sbr!4v1692028299000!5m2!1spt-BR!2sbr" 
-            width="100%" height="315" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-    </div>
-</section>
-
-</section>
-
+            <!-- Mapa do Google -->
+            <div class="mapa-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.7898516604095!2d-38.392356!3d-10.608546!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDM2JzMwLjgiUyAzOMKwMjMnMzIuNSJX!5e0!3m2!1spt-BR!2sbr!4v1692028299000!5m2!1spt-BR!2sbr" 
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
+    </section>
 
     <section id="horario">
        <!--O HORÁRIO VAI SER AQUI-->
     </section>
 
-    <section id="localizacao">
-    <h2>Localização</h2>
-    <div class="mapa-container">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d3921.6238087962665!2d-38.392331!3d-10.608557000000001!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDM2JzMwLjgiUyAzOMKwMjMnMzIuNSJX!5e0!3m2!1spt-BR!2sus!4v1754769243366!5m2!1spt-BR!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-</section>
-
-    <section id="fotos">
-        <h2>📷 Fotos de Eventos</h2>
-        <div class="galeria">
-            <img src="img/evento1.jpg" alt="Evento 1">
-            <img src="img/evento2.jpg" alt="Evento 2">
-            <img src="img/evento3.jpg" alt="Evento 3">
-        </div>
-    </section>
-
     <section id="agendamento">
-        <h2>🖥️ Agendamento do Laboratório</h2>
-        <iframe src="https://calendar.google.com/calendar/embed?src=SEU_ID_DE_CALENDARIO&mode=week" 
-                style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
+        
+        <div class="calendly-inline-widget" 
+     data-url="https://calendly.com/teceminformaticaceep/30min" 
+     style="min-width:320px;height:630px;"></div>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
     </section>
 
     <footer>

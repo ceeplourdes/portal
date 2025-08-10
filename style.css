@@ -627,11 +627,11 @@ footer {
 .video-mapa {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin: 10px 0;
+    gap: 20px;
+    margin: 20px 0;
 }
 
 .video-container, .mapa-container {
     flex: 1;
-    min-width: 200px;
+    min-width: 300px;
 }
