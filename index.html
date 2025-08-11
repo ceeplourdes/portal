@@ -91,6 +91,12 @@
             <div class="icone">📝</div>
             <div class="texto-botao">SIADIANTE<br>Atualização cadastral</div>
         </a>
+       
+        <a href="https://login.plurall.net/" class="botao-horizontal" target="_blank">
+        <div class="icone">📚</div>
+        <div class="texto-botao">PLURALL<br>Acesso à plataforma</div>
+    </a>
+
     </section>
 
     <main>
@@ -99,55 +105,114 @@
         <aside class="ultimas-noticias">
             <h2>Últimas Notícias</h2>
             <div id="noticias"></div>
+            <button id="ver-mais" class="btn-ver-mais" style="display:none;">Ver mais notícias</button>
+
+
+<!-- ULTIMAS NOTÍCIAS -->
+<aside class="ultimas-noticias">
+
+    <div id="noticias"></div>
+    <a href="todas-noticias.html" class="btn-ver-mais" style="display:block; text-align:center; margin-top:20px; padding:10px 20px; background:#0c056d; color:white; text-decoration:none; border-radius:5px;">
+        Ver mais notícias
+    </a>
+</aside>
 
 <script>
 const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT7mLbbDjV9ZP1uKkRarE5L3jbpk9NzARPj8xP7DR8p0KfWynqXoySf475LyApPdsv2VrKuWhGLhl2q/pub?output=csv";
+const PLACEHOLDER = "https://via.placeholder.com/200x120?text=Not%C3%ADcia";
+
+// Quebra linha CSV preservando textos com vírgula
+function splitCsvLine(line){
+  return line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, "").trim());
+}
+
+// Ajusta link de imagem
+function normalizeImageField(raw){
+  if(!raw) return "";
+  let s = raw.trim();
+  const mdrive = s.match(/https?:\/\/drive\.google\.com\/open\?id=([^&]+)/);
+  if(mdrive) return `https://drive.google.com/uc?export=view&id=${mdrive[1]}`;
+  return s;
+}
+
+// Converte DD/MM/YYYY HH:MM:SS para objeto Date
+function parseDateBR(str){
+  if(!str) return null;
+  const m = str.match(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+  if(m){
+    return new Date(+m[3], m[2]-1, +m[1], +m[4], +m[5], +m[6]);
+  }
+  return new Date(str);
+}
+
+// Formata data no padrão BR
+function formatDateForDisplay(date){
+  return date.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+// Escapa HTML
+function escapeHtml(text){
+  return String(text || "").replace(/[&<>"']/g, s => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[s]));
+}
 
 fetch(url)
-  .then(response => response.text())
-  .then(data => {
-    let linhas = data.split("\n").slice(1); // remove cabeçalho
-    let noticias = linhas.map(linha => {
-      let [data, titulo, descricao, conteudo, imagem] = linha.split(",");
-      return { data, titulo, descricao, conteudo, imagem };
+  .then(res => res.text())
+  .then(csv => {
+    const lines = csv.trim().split(/\r?\n/);
+    lines.shift(); // remove cabeçalho
+
+    const noticias = lines.map(line => {
+      const [dataPub, titulo, conteudo, imagemRaw, autor] = splitCsvLine(line);
+      const dateObj = parseDateBR(dataPub);
+      const imagem = normalizeImageField(imagemRaw) || PLACEHOLDER;
+      return {
+        titulo,
+        dataPub: dateObj ? formatDateForDisplay(dateObj) : dataPub,
+        conteudo,
+        autor,
+        imagem,
+        descricao: conteudo.substring(0, 120) + (conteudo.length > 120 ? "..." : "")
+      };
     });
 
-    // Ordena por data (mais recentes primeiro)
-    noticias.sort((a, b) => new Date(b.data) - new Date(a.data));
-
-    // Pega só as 3 últimas
-    noticias = noticias.slice(0, 3);
-
-    // Monta o HTML
-    let html = noticias.map(n => `
-      <div style="border:1px solid #ccc; margin:10px; padding:10px;">
-        <img src="${n.imagem}" style="width:100%; max-height:200px; object-fit:cover;">
-        <h3>${n.titulo}</h3>
-        <small>${n.data}</small>
-        <p>${n.descricao}</p>
-        <details>
-          <summary>Leia mais</summary>
-          <p>${n.conteudo}</p>
-        </details>
+    const html = noticias.map(n => `
+      <div style="display:flex; align-items:flex-start; border-bottom:1px solid #ccc; padding:10px 0;">
+        <img src="${n.imagem}" alt="${escapeHtml(n.titulo)}" style="width:200px; height:120px; object-fit:cover; margin-right:15px;">
+        <div>
+          <h3 style="margin:0; color:#0c056d;">${escapeHtml(n.titulo)}</h3>
+          <small style="color:#555;">${escapeHtml(n.dataPub)}</small>
+          <p style="margin:5px 0;">${escapeHtml(n.descricao)}</p>
+          <details>
+            <summary style="cursor:pointer; color:#0c056d; font-weight:bold;">(ver mais)</summary>
+            <p>${escapeHtml(n.conteudo)}</p>
+            ${n.autor ? `<p style="font-style:italic;">Autor: ${escapeHtml(n.autor)}</p>` : ''}
+            <img src="${n.imagem}" alt="${escapeHtml(n.titulo)}" style="width:100%; max-width:500px; margin-top:10px; border-radius:5px;">
+          </details>
+        </div>
       </div>
     `).join("");
 
     document.getElementById("noticias").innerHTML = html;
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("noticias").innerHTML = "<p>Não foi possível carregar as notícias.</p>";
   });
 </script>
-
             <button id="ver-mais" class="btn-ver-mais" style="display: none;">Ver mais notícias</button>
         </aside>
     </main>
 
     <section id="escola" class="escola-moderna">
         <div class="escola-header">
-            <h2><span class="destaque">SOBRE O CEEP LOURDES</span> CARVALHO</h2>
+            <h2>SOBRE O CEEP </h2>
         </div>
 
         <div class="escola-grid">
             <div class="escola-card escola-historia">
-                <h3>Nossa história</h3>
+                <h3>Fundação</h3>
                 <p>O Centro Estadual de Educação Profissional em Informática e Gestão Lourdes Carvalho Neves Batista, localizado na Avenida Antônio Carlos Magalhães, n° 9998, Bairro Mangueira, Município de Cícero Dantas – BA, foi criada pela portaria de 14905, publicada no Diário Oficial de 10/11/2006.</p>
             </div>
 
@@ -166,8 +231,8 @@ fetch(url)
 
             <div class="escola-card escola-local">
                 <h3>Onde estamos</h3>
-                <p>Av. Antônio Carlos Magalhães, 9998<br>Bairro Mangueira<br>Cícero Dantas - BA</p>
-                <a href="#localizacao" class="btn-localizacao">Ver no mapa →</a>
+                <p>Av. Antônio Carlos Magalhães, 9998<br>Bairro: Mangueira<br>CEP: 48.410-000<br>Cícero Dantas - BA</p>
+                
             </div>
         </div>
 
