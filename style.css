@@ -390,13 +390,38 @@ h1, h2 {
 }
 
 /* Rodapé */
-footer {
-    background: var(--cor-primaria);
-    color: var(--cor-branca);
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-}
+<style>
+    footer {
+        background-color: #0c056d;
+        color: white;
+        padding: 15px 80px;
+        margin-top: 40px;
+        
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .social-icons a {
+        margin-left: 10px;
+        display: inline-block;
+    }
+
+    .social-icons img {
+        width: 28px;
+        height: 28px;
+        transition: transform 0.3s;
+    }
+
+    .social-icons img:hover {
+        transform: scale(1.2);
+    }
+</style>
+
 
 /* Responsividade */
 @media (max-width: 992px) {

@@ -167,3 +167,6 @@ function formatarData(dataString) {
 
 // Inicia o carregamento das notícias quando a página carregar
 document.addEventListener('DOMContentLoaded', carregarNoticias);
+
+
+

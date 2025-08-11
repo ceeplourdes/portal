@@ -44,7 +44,7 @@
         </a>
         <nav>
             <a href="index.html">INÍCIO</a>
-            <a href="#noticias">NOTÍCIAS</a>
+            <a href="todas-noticias.html">NOTÍCIAS</a>
             <a href="#escola">NOSSA ESCOLA</a>
             <a href="#cursos">CURSOS</a>            
             <a href="#horario">HORÁRIO DAS TURMAS</a>
@@ -110,7 +110,6 @@
 
 <!-- ULTIMAS NOTÍCIAS -->
 <aside class="ultimas-noticias">
-
     <div id="noticias"></div>
     <a href="todas-noticias.html" class="btn-ver-mais" style="display:block; text-align:center; margin-top:20px; padding:10px 20px; background:#0c056d; color:white; text-decoration:none; border-radius:5px;">
         Ver mais notícias
@@ -120,13 +119,12 @@
 <script>
 const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT7mLbbDjV9ZP1uKkRarE5L3jbpk9NzARPj8xP7DR8p0KfWynqXoySf475LyApPdsv2VrKuWhGLhl2q/pub?output=csv";
 const PLACEHOLDER = "https://via.placeholder.com/200x120?text=Not%C3%ADcia";
+const LIMITE = 200;
 
-// Quebra linha CSV preservando textos com vírgula
 function splitCsvLine(line){
   return line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, "").trim());
 }
 
-// Ajusta link de imagem
 function normalizeImageField(raw){
   if(!raw) return "";
   let s = raw.trim();
@@ -135,7 +133,6 @@ function normalizeImageField(raw){
   return s;
 }
 
-// Converte DD/MM/YYYY HH:MM:SS para objeto Date
 function parseDateBR(str){
   if(!str) return null;
   const m = str.match(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
@@ -145,65 +142,105 @@ function parseDateBR(str){
   return new Date(str);
 }
 
-// Formata data no padrão BR
 function formatDateForDisplay(date){
   return date.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
 }
 
-// Escapa HTML
 function escapeHtml(text){
   return String(text || "").replace(/[&<>"']/g, s => ({
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   }[s]));
 }
 
+function cortarTexto(texto, limite) {
+  if (texto.length <= limite) return { resumo: texto, restante: "" };
+  let corte = texto.lastIndexOf(" ", limite);
+  if (corte === -1) corte = limite;
+  return {
+    resumo: texto.substring(0, corte),
+    restante: texto.substring(corte)
+  };
+}
+
 fetch(url)
   .then(res => res.text())
   .then(csv => {
     const lines = csv.trim().split(/\r?\n/);
-    lines.shift(); // remove cabeçalho
+    lines.shift();
 
-    const noticias = lines.map(line => {
+    let noticias = lines.map(line => {
       const [dataPub, titulo, conteudo, imagemRaw, autor] = splitCsvLine(line);
       const dateObj = parseDateBR(dataPub);
       const imagem = normalizeImageField(imagemRaw) || PLACEHOLDER;
+      const partes = cortarTexto(conteudo, LIMITE);
       return {
         titulo,
         dataPub: dateObj ? formatDateForDisplay(dateObj) : dataPub,
-        conteudo,
+        dataOrdenacao: dateObj ? dateObj.getTime() : 0,
         autor,
         imagem,
-        descricao: conteudo.substring(0, 120) + (conteudo.length > 120 ? "..." : "")
+        resumo: partes.resumo,
+        restante: partes.restante
       };
     });
 
-    const html = noticias.map(n => `
+    // Ordena pela data mais recente
+    noticias.sort((a, b) => b.dataOrdenacao - a.dataOrdenacao);
+
+    // Pega só as 3 primeiras
+    noticias = noticias.slice(0, 3);
+
+    const html = noticias.map((n, i) => `
       <div style="display:flex; align-items:flex-start; border-bottom:1px solid #ccc; padding:10px 0;">
-        <img src="${n.imagem}" alt="${escapeHtml(n.titulo)}" style="width:200px; height:120px; object-fit:cover; margin-right:15px;">
+        <img data-src="${n.imagem}" alt="${escapeHtml(n.titulo)}" style="width:200px; height:120px; object-fit:cover; margin-right:15px;" class="lazy">
         <div>
           <h3 style="margin:0; color:#0c056d;">${escapeHtml(n.titulo)}</h3>
           <small style="color:#555;">${escapeHtml(n.dataPub)}</small>
-          <p style="margin:5px 0;">${escapeHtml(n.descricao)}</p>
-          <details>
-            <summary style="cursor:pointer; color:#0c056d; font-weight:bold;">(ver mais)</summary>
-            <p>${escapeHtml(n.conteudo)}</p>
-            ${n.autor ? `<p style="font-style:italic;">Autor: ${escapeHtml(n.autor)}</p>` : ''}
-            <img src="${n.imagem}" alt="${escapeHtml(n.titulo)}" style="width:100%; max-width:500px; margin-top:10px; border-radius:5px;">
-          </details>
+          <p>
+            ${escapeHtml(n.resumo)}<span id="pontos-${i}">...</span>
+            <span id="restante-${i}" style="display:none;">${escapeHtml(n.restante)}</span>
+            ${n.restante ? `<a href="#" class="ver-mais-link" data-id="${i}" style="color:#0c056d; font-weight:bold;">(ver mais)</a>` : ""}
+          </p>
+          ${n.autor ? `<p style="font-style:italic;">Autor: ${escapeHtml(n.autor)}</p>` : ""}
         </div>
       </div>
     `).join("");
 
     document.getElementById("noticias").innerHTML = html;
+
+    document.querySelectorAll(".ver-mais-link").forEach(link => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        const id = this.dataset.id;
+        document.getElementById(`restante-${id}`).style.display = "inline";
+        document.getElementById(`pontos-${id}`).style.display = "none";
+        this.style.display = "none";
+      });
+    });
+
+    // Lazy loading das imagens
+    const lazyImages = document.querySelectorAll("img.lazy");
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+          img.classList.remove("lazy");
+          obs.unobserve(img);
+        }
+      });
+    }, { rootMargin: "100px" });
+
+    lazyImages.forEach(img => observer.observe(img));
   })
   .catch(err => {
     console.error(err);
     document.getElementById("noticias").innerHTML = "<p>Não foi possível carregar as notícias.</p>";
   });
 </script>
-            <button id="ver-mais" class="btn-ver-mais" style="display: none;">Ver mais notícias</button>
-        </aside>
-    </main>
+
+
 
     <section id="escola" class="escola-moderna">
         <div class="escola-header">

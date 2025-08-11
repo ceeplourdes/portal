@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todas as Notícias - CEEP Lourdes</title>
+  <title>Notícias - CEEP Lourdes</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,48 +22,185 @@
 </header>
 
 <main style="max-width:1000px; margin:auto; padding:20px;">
-  <h1 style="text-align:center; margin-bottom:20px;">Todas as Notícias</h1>
+  <h1 style="
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #0c056d;
+    border-bottom: 3px solid #0c056d;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+  ">
+    Notícias
+  </h1>
   <div id="todas-noticias"></div>
 </main>
 
+<!-- Paginação -->
+<div id="paginacao" style="display:flex; justify-content:center; gap:5px; margin:30px 0;"></div>
+
+   <!-- Rodapé -->
 <footer>
-  <div class="footer-content">
-    <p>© 2025 CEEP Lourdes Carvalho - Todos os direitos reservados</p>
-    <div class="social-icons">
-      <a href="https://www.instagram.com/ceeplourdes/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"></a>
-      <a href="https://api.whatsapp.com/message/GAJNXSJ3HNGLE1" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
-      <a href="https://www.facebook.com/lourdes.carvalho.1441" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
-      <a href="https://www.youtube.com/@ceeplourdes" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"></a>
+    <div class="footer-content">
+        <p>© 2025 CEEP Lourdes Carvalho - Todos os direitos reservados</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/ceeplourdes/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+            </a>
+            <a href="https://api.whatsapp.com/message/GAJNXSJ3HNGLE1?autoload=1&app_absent=0" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+            </a>
+            <a href="https://www.facebook.com/lourdes.carvalho.1441/?_rdr" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+            </a>
+            <a href="https://www.youtube.com/@ceeplourdes" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">
+            </a>
+        </div>
     </div>
-  </div>
 </footer>
+
+<style>
+    footer {
+        background-color: #0c056d;
+        color: white;
+        padding: 15px 80px;
+        margin-top: 40px;
+        
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .social-icons a {
+        margin-left: 10px;
+        display: inline-block;
+    }
+
+    .social-icons img {
+        width: 28px;
+        height: 28px;
+        transition: transform 0.3s;
+    }
+
+    .social-icons img:hover {
+        transform: scale(1.2);
+    }
+</style>
+
+
+
+    <script src="script.js"></script>
 
 <script>
 const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT7mLbbDjV9ZP1uKkRarE5L3jbpk9NzARPj8xP7DR8p0KfWynqXoySf475LyApPdsv2VrKuWhGLhl2q/pub?output=csv";
+const noticiasPorPagina = 10;
+let noticias = [];
+let paginaAtual = 1;
+
+function splitCsvLine(line){
+  return line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, "").trim());
+}
+
+function parseDateBR(str){
+  if(!str) return null;
+  const m = str.match(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+  if(m){
+    return new Date(+m[3], m[2]-1, +m[1], +m[4], +m[5], +m[6]);
+  }
+  return new Date(str);
+}
+
+function formatDateForDisplay(date){
+  return date.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+function escapeHtml(text){
+  return String(text || "").replace(/[&<>"']/g, s => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[s]));
+}
+
+function renderNoticias(){
+  const inicio = (paginaAtual - 1) * noticiasPorPagina;
+  const fim = inicio + noticiasPorPagina;
+  const noticiasPagina = noticias.slice(inicio, fim);
+
+  const html = noticiasPagina.map((n, index) => {
+    const preview = n.conteudo.length > 150 ? n.conteudo.substring(0, 150) + "..." : n.conteudo;
+    return `
+      <div style="border-bottom:1px solid #ccc; padding:10px 0;">
+        <h3 style="margin:0; color:#0c056d;">${escapeHtml(n.titulo)}</h3>
+        <small style="color:#555;">${escapeHtml(n.dataPub)}</small>
+        <p id="texto-${index}" style="margin:5px 0;">${escapeHtml(preview)}</p>
+        ${n.autor ? `<p style="font-style:italic;">Autor: ${escapeHtml(n.autor)}</p>` : ''}
+        <button onclick="toggleNoticia(${index}, '${escapeHtml(n.conteudo).replace(/'/g, "\\'")}')" style="background:#0c056d; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:5px;">Leia mais</button>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("todas-noticias").innerHTML = html;
+  renderPaginacao();
+}
+
+function renderPaginacao(){
+  const totalPaginas = Math.ceil(noticias.length / noticiasPorPagina);
+  let botoes = "";
+
+  for(let i=1; i<=totalPaginas; i++){
+    botoes += `<button onclick="mudarPagina(${i})" style="background:${i===paginaAtual ? '#0c056d' : '#ccc'}; color:${i===paginaAtual ? 'white' : 'black'}; border:none; padding:5px 10px; cursor:pointer; border-radius:5px;">${i}</button>`;
+  }
+
+  document.getElementById("paginacao").innerHTML = botoes;
+}
+
+function mudarPagina(num){
+  paginaAtual = num;
+  renderNoticias();
+}
+
+function toggleNoticia(index, conteudo) {
+  const p = document.getElementById(`texto-${index}`);
+  const btn = p.parentElement.querySelector("button");
+  if (p.getAttribute("data-expanded") === "true") {
+    p.innerText = conteudo.substring(0, 150) + "...";
+    p.setAttribute("data-expanded", "false");
+    btn.innerText = "Leia mais";
+  } else {
+    p.innerText = conteudo;
+    p.setAttribute("data-expanded", "true");
+    btn.innerText = "Mostrar menos";
+  }
+}
 
 fetch(url)
-  .then(response => response.text())
-  .then(data => {
-    let linhas = data.split("\n").slice(1);
-    let noticias = linhas.map(linha => {
-      let campos = linha.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-      let [dataPub, titulo, descricao, conteudo, imagem] = campos.map(c => c.replace(/^"|"$/g, ""));
-      return { data: dataPub, titulo, descricao, conteudo, imagem };
+  .then(res => res.text())
+  .then(csv => {
+    const lines = csv.trim().split(/\r?\n/);
+    lines.shift();
+
+    noticias = lines.map(line => {
+      const [dataPub, titulo, conteudo, , autor] = splitCsvLine(line);
+      const dateObj = parseDateBR(dataPub);
+      return {
+        titulo,
+        dataPub: dateObj ? formatDateForDisplay(dateObj) : dataPub,
+        conteudo,
+        autor,
+        dateObj
+      };
     });
 
-    noticias.sort((a, b) => new Date(b.data) - new Date(a.data));
-
-    let html = noticias.map(n => `
-      <div style="margin:10px; padding:20px; border-bottom:1px solid #ddd;">
-        <img src="${n.imagem}" style="width:200px; max-height:500px; object-fit:cover;">
-        <h3>${n.titulo}</h3>
-        <small>${n.data}</small>
-        <p>${n.descricao}</p>
-        <p>${n.conteudo}</p>
-      </div>
-    `).join("");
-
-    document.getElementById("todas-noticias").innerHTML = html;
+    noticias.sort((a, b) => b.dateObj - a.dateObj);
+    renderNoticias();
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("todas-noticias").innerHTML = "<p>Não foi possível carregar as notícias.</p>";
   });
 </script>
 
